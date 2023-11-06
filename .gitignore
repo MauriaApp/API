@@ -1,0 +1,9 @@
+/.vscode
+/node_modules
+/detailplan.js
+/oldJson
+
+/update.js
+/statsNotes.js
+
+fly.toml
