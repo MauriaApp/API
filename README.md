@@ -10,7 +10,7 @@ Ici se trouve le code de l'API permettant la récupération des différentes don
 
 Mauria est, à l'origine, une application autonome. Cependant, suite à de nombreux soucis rencontrés au cours des mois, il a été décidé de faire une API entre les différents serveurs et l'application.
 
-Cela à plusieurs points positifs: 
+Cela a plusieurs points positifs : 
 -   Réglage des problèmes plus rapide
 -   Réduction des temps de chargement
 -   Mise à jour constante des données (des fonctions permettant la récup des données)
@@ -18,9 +18,9 @@ Cela à plusieurs points positifs:
 
 ---
 
-Il y a 2 autres fichiers qui sont utilisés au sein de l'API qui ne sont pas présent dans ce repo: 
+Il y a 2 autres fichiers qui sont utilisés au sein de l'API qui ne sont pas présents dans ce repo: 
 
-Ce sont les fichiers permettant les statistiques pour les notes, qui sont privé pour des raisons de sécurité.
+Ce sont les fichiers permettant les statistiques pour les notes, qui sont privés pour des raisons de sécurité.
 
 ---
 
