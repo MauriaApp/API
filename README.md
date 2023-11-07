@@ -24,4 +24,4 @@ Ce sont les fichiers permettant les statistiques pour les notes, qui sont privé
 
 ## Documentation
 
-Une documentation de l'API est disponible   [ici](https://app.swaggerhub.com/apis/MylowMntr/MauriaAPI/1.0.0)
+Une documentation de l'API est disponible   [ici](https://mauriaapi.fly.dev/api-docs)
