@@ -22,6 +22,6 @@ Il y a 2 autres fichiers qui sont utilisés au sein de l'API qui ne sont pas pr�
 
 Ce sont les fichiers permettant les statistiques pour les notes, qui sont privés pour des raisons de sécurité.
 
----
+## Documentation
 
-Une documentation de l'API est disponible   [ici]()  (nan en vrai pas encore :P)
+Une documentation de l'API est disponible   [ici](https://app.swaggerhub.com/apis/MylowMntr/MauriaAPI/1.0.0)
