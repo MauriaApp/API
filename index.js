@@ -330,8 +330,8 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:8080',
-        description: 'Serveur local',
+        url: 'https://mauriaapi.fly.dev/',
+        description: 'Serveur Fly.io',
       },
     ],
   },
