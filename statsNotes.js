@@ -64,7 +64,3 @@ async function GetStatsNotes(username, password) {
 }
 
 export { PostStatsNotes, GetStatsNotes };
-
-
-// console.log(await PostStatsNotes(username, password, true));
-// console.log(await PostStatsNotes("milo.montuori@student.junia.com", "5?8xWrAg"));
