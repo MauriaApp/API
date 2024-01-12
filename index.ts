@@ -1,15 +1,15 @@
-import { getAllNote } from './notes.js';
-import { getAllAbsence } from './absences.js';
-import { getPlanning } from './planning.js';
-import { PostStatsNotes, GetStatsNotes } from './statsNotes.js';
-import login from './login.js';
+import { getAllNote } from './notes';
+import { getAllAbsence } from './absences';
+import { getPlanning } from './planning';
+import { PostStatsNotes, GetStatsNotes } from './statsNotes';
+import login from './login';
 
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 
-import { getAssos } from './assos.js';
-import { getMsg } from './msg.js';
-import { getUpdate } from './update.js';
+import { getAssos } from './assos';
+import { getMsg } from './msg';
+import { getUpdate } from './update';
 
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
@@ -31,8 +31,7 @@ app.use(cors());
  *       '200':
  *         description: Message d'accueil.
  */
-
-app.get('/', function (req, res) {
+app.get('/', function (req: Request, res: Response) {
   res.send("Hello World! Il n'y a rien ici :(");
 });
 
@@ -47,7 +46,7 @@ app.get('/', function (req, res) {
  *       '500':
  *         description: Erreur serveur
  */
-app.get('/assos', function (req, res) {
+app.get('/assos', function (req: Request, res: Response) {
   getAssos()
     .then((result) => {
       res.status(200).send(result);
@@ -68,7 +67,7 @@ app.get('/assos', function (req, res) {
  *       '500':
  *         description: Erreur serveur
  */
-app.get('/msg', function (req, res) {
+app.get('/msg', function (req: Request, res: Response) {
   getMsg()
     .then((result) => {
       res.status(200).send(result);
@@ -89,7 +88,7 @@ app.get('/msg', function (req, res) {
  *       '500':
  *         description: Erreur serveur
  */
-app.get('/update', function (req, res) {
+app.get('/update', function (req: Request, res: Response) {
   getUpdate()
     .then((result) => {
       res.status(200).send(result);
@@ -124,7 +123,7 @@ app.get('/update', function (req, res) {
  *       '401':
  *         description: Échec de l'authentification
  */
-app.post('/login', function (req, res) {
+app.post('/login', function (req: Request, res: Response) {
   login(req.body.username, req.body.password)
     .then((result) => {
       res.sendStatus(result[1]);
@@ -159,7 +158,7 @@ app.post('/login', function (req, res) {
  *       '401':
  *         description: Échec de l'authentification
  */
-app.post('/notes', function (req, res) {
+app.post('/notes', function (req: Request, res: Response) {
   getAllNote(req.body.username, req.body.password)
     .then((result) => {
       res.status(200).send(result);
@@ -194,7 +193,7 @@ app.post('/notes', function (req, res) {
  *       '401':
  *         description: Échec de l'authentification
  */
-app.post('/absences', function (req, res) {
+app.post('/absences', function (req: Request, res: Response) {
   getAllAbsence(req.body.username, req.body.password)
     .then((result) => {
       res.status(200).send(result);
@@ -236,8 +235,10 @@ app.post('/absences', function (req, res) {
  *       '401':
  *         description: Échec de l'authentification
  */
-app.post('/planning', function (req, res) {
-  getPlanning(req.body.username, req.body.password, req.query.start, req.query.end)
+app.post('/planning', function (req: Request, res: Response) {
+  const start = req.query.start as string;
+  const end = req.query.end as string;
+  getPlanning(req.body.username, req.body.password, start, end)
     .then((result) => {
       res.status(200).send(result);
     })
@@ -274,7 +275,7 @@ app.post('/planning', function (req, res) {
  *       '401':
  *         description: Échec de l'authentification
  */
-app.post('/poststats', function (req, res) {
+app.post('/poststats', function (req: Request, res: Response) {
   PostStatsNotes(req.body.username, req.body.password, req.body.shared)
     .then((result) => {
       res.status(200).send(result);
@@ -309,7 +310,7 @@ app.post('/poststats', function (req, res) {
  *       '401':
  *         description: Échec de l'authentification
  */
-app.post('/getstats', function (req, res) {
+app.post('/getstats', function (req: Request, res: Response) {
   GetStatsNotes(req.body.username, req.body.password)
     .then((result) => {
       res.status(200).send(result);
@@ -335,7 +336,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ["./index.js"], // Incluez ce fichier lui-même pour générer la documentation
+  apis: ["./index.ts"], // Incluez ce fichier lui-même pour générer la documentation
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);

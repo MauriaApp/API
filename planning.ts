@@ -1,20 +1,21 @@
 import axios from "axios";
 import url from "url";
-import login from "./login.js";
+import login from "./login";
 
-var formId = "";
+let formId = "";
 
-function parseViewState(body) {
-    const viewState = body.match(
+function parseViewState(body: string): string {
+    const match = body.match(
         /<input type="hidden" name="javax.faces.ViewState" id="j_id1:javax.faces.ViewState:0" value="([^"]+)" autocomplete="off" \/>/
-    )[1];
+    );
+    const viewState = match ? match[1] : "";
     return viewState;
 }
 
-function parseMenuId(body) {
-    var from = "";
-    var to = "Planning";
-    var menuid = body.substring(body.indexOf(to) - 300, body.indexOf(to));
+function parseMenuId(body: string): string {
+    let from = "";
+    let to = "Planning";
+    let menuid = body.substring(body.indexOf(to) - 300, body.indexOf(to));
     from = "form:sidebar_menuid':'";
     to = "'})";
     menuid = menuid.substring(menuid.indexOf(from) + from.length, menuid.indexOf(to));
@@ -23,11 +24,11 @@ function parseMenuId(body) {
     return menuid;
 }
 
-function parseFormId(body) {
+function parseFormId(body: string): number {
     // console.log(body);
-    var from = "";
-    var to = ">chargerSousMenu = function()";
-    var formid = body.substring(body.indexOf(to), body.indexOf(to)+ 300);
+    let from = "";
+    let to = ">chargerSousMenu = function()";
+    let formid = body.substring(body.indexOf(to), body.indexOf(to) + 300);
     from = "{PrimeFaces.ab({s:";
     to = ",f:";
     formid = formid.substring(formid.indexOf(from) + from.length, formid.indexOf(to));
@@ -37,11 +38,11 @@ function parseFormId(body) {
     return 0;
 }
 
-function parseFormIdPlanning(body) {
+function parseFormIdPlanning(body: string): number {
     // console.log(body);
-    var from = "";
-    var to = `class="schedule"><div`;
-    var formid = body.substring(body.indexOf(to)-300, body.indexOf(to)+100);
+    let from = "";
+    let to = `class="schedule"><div`;
+    let formid = body.substring(body.indexOf(to) - 300, body.indexOf(to) + 100);
     from = "</script> <br /> <br /><div id=";
     to = ` class="schedule">`;
     formid = formid.substring(formid.indexOf(from) + from.length, formid.indexOf(to));
@@ -51,8 +52,7 @@ function parseFormIdPlanning(body) {
     return 0;
 }
 
-
-async function getViewState(url, sessionId) {
+async function getViewState(url: string, sessionId: string): Promise<string> {
     const res = await axios.get(url, {
         headers: {
             Cookie: `JSESSIONID=${sessionId}`,
@@ -64,7 +64,7 @@ async function getViewState(url, sessionId) {
     return parseViewState(res.data);
 }
 
-async function postMainSidebar(viewState, sessionId) {
+async function postMainSidebar(viewState: string, sessionId: string): Promise<string> {
     const res = await axios.post(
         "https://aurion.junia.com/faces/MainMenuPage.xhtml",
         new url.URLSearchParams({
@@ -92,7 +92,7 @@ async function postMainSidebar(viewState, sessionId) {
     return parseMenuId(res.data);
 }
 
-async function postMainSidebarPlan(viewState, sessionId, menuId) {
+async function postMainSidebarPlan(viewState: string, sessionId: string, menuId: string): Promise<string> {
     const res = await axios.post(
         "https://aurion.junia.com/faces/MainMenuPage.xhtml",
         new url.URLSearchParams({
@@ -118,14 +118,12 @@ async function postMainSidebarPlan(viewState, sessionId, menuId) {
     return parseViewState(res.data);
 }
 
-
-async function postPlan(viewState, sessionId, start, end, today, week, year) {
-    start = String((start - 604800000));
-    end = String((end + 2 * 2629800000));
+async function postPlan(viewState: string, sessionId: string, start: string, end: string, today: string, week: string, year: string): Promise<string> {
+    start = String(Number(start) - 604800000);
+    end = String(Number(end) + 2 * 2629800000);
     today = String(today);
     week = String(week);
     year = String(year);
-
 
     const axiosRes = await axios.post(
         "https://aurion.junia.com/faces/Planning.xhtml",
@@ -140,7 +138,7 @@ async function postPlan(viewState, sessionId, start, end, today, week, year) {
             form: "form",
             "form:largeurDivCenter": "1236",
             "form:date_input": today,
-            "form:week": week+"-"+year,
+            "form:week": week + "-" + year,
             [formId + "_view"]: "agendaWeek",
             "form:offsetFuseauNavigateur": "-3600000",
             "form:onglets_activeIndex": "0",
@@ -148,7 +146,7 @@ async function postPlan(viewState, sessionId, start, end, today, week, year) {
             "form:j_idt236_focus": "",
             "form:j_idt236_input": "44323",
             "javax.faces.ViewState": viewState,
-        }).toString(),
+        } as any).toString(),
         {
             headers: {
                 Cookie: `JSESSIONID=${sessionId}`,
@@ -159,24 +157,23 @@ async function postPlan(viewState, sessionId, start, end, today, week, year) {
 
     // console.log(axiosRes.data);
 
-    var data = (axiosRes.data);
-    
+    let data = (axiosRes.data);
 
     data = data.match(/\[\{"id"(.*?)]]/)[0];
     data = data.slice(0, -3);
     return data;
 }
 
-export async function getPlanning(email, password, start, end) {
+export async function getPlanning(email: string, password: string, start: string, end: string): Promise<string> {
     // console.time('ExecutionTime')
     const today = start;
 
-    var date = new Date(start);
-    start = date.getTime();
+    let date = new Date(start);
+    start = date.getTime().toString();
 
-    var date = new Date(start);
+    date = new Date(start);
     date.setMonth(date.getMonth() + 2);
-    end = date.getTime();
+    end = date.getTime().toString();
 
     // console.log(start, end, today);
 
@@ -184,7 +181,6 @@ export async function getPlanning(email, password, start, end) {
     const year = start;     // pareil
 
     // console.log(start, end, today, week, year);
-
 
     const res = await login(email, password);
     if (res[1] !== 302) {
@@ -194,12 +190,10 @@ export async function getPlanning(email, password, start, end) {
     const sessionId = res[0];
     // console.log(sessionId);
 
-
     let viewState = await getViewState("https://aurion.junia.com/", sessionId);
     // console.log(`main viewState: ${viewState}`);
 
     const menuid = await postMainSidebar(viewState, sessionId);
-
 
     viewState = await postMainSidebarPlan(viewState, sessionId, menuid);
     // console.log(`note viewState: ${viewState}`);
@@ -211,7 +205,7 @@ export async function getPlanning(email, password, start, end) {
         const final = planning;
         // console.log(final);
         // console.timeEnd('ExecutionTime');
-        return (final);
+        return final;
     } catch (error) {
         throw error;
     }

@@ -1,14 +1,20 @@
 import axios from "axios";
 
-export async function getAssos() {
-    const res = await axios("https://mauriacms.fly.dev/api/associations?populate=*");
+interface Assos {
+    name: string;
+    desc: string;
+    contact: string;
+    image: string;
+}
 
-    const jsonData = await res.data;
+export async function getAssos(): Promise<Assos[]> {
+    const res = await axios.get("https://mauriacms.fly.dev/api/associations?populate=*");
+
+    const jsonData = res.data;
 
     const data = jsonData["data"];
-    // console.log(data);
 
-    let assos = [];
+    let assos: Assos[] = [];
 
     // Récupérer les valeurs spécifiques
     for (let i in data) {
@@ -25,12 +31,10 @@ export async function getAssos() {
         });        
     }
 
-    // sort les assos par ordre alphabétique sans prendre en compte les majuscules
+    // Trier les assos par ordre alphabétique sans prendre en compte les majuscules
     assos.sort((a, b) => a.name.localeCompare(b.name, 'fr', {ignorePunctuation: true}));
-
 
     return assos;
 }
-
 
 // console.log(await getAssos());

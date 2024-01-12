@@ -1,61 +1,54 @@
 import axios from "axios";
 import url from "url";
 
-import login from "./login.js";
+import login from "./login";
 
-var formId = "";
+let formId = "";
 
-function parseViewState(body) {
-    const viewState = body.match(
+function parseViewState(body: string): string {
+    const match = body.match(
         /<input type="hidden" name="javax.faces.ViewState" id="j_id1:javax.faces.ViewState:0" value="([^"]+)" autocomplete="off" \/>/
-    )[1];
+    );
+    const viewState = match ? match[1] : "";
     return viewState;
 }
 
-function parseMenuId(body) {
-    var from = "";
-    var to = "Mes absences</span>";
-    var menuid = body.substring(body.indexOf(to) - 300, body.indexOf(to));
+function parseMenuId(body: string): string {
+    let from = "";
+    let to = "Mes absences</span>";
+    let menuid = body.substring(body.indexOf(to) - 300, body.indexOf(to));
     from = "form:sidebar_menuid':'";
     to = "'})";
     menuid = menuid.substring(menuid.indexOf(from) + from.length, menuid.indexOf(to));
 
-    // console.log(menuid);
     return menuid;
 }
 
-function parseFormId(body) {
-    // console.log(body);
-    var from = "";
-    var to = ">chargerSousMenu = function()";
-    var formid = body.substring(body.indexOf(to), body.indexOf(to) + 300);
+function parseFormId(body: string): number {
+    let from = "";
+    let to = ">chargerSousMenu = function()";
+    let formid = body.substring(body.indexOf(to), body.indexOf(to) + 300);
     from = "{PrimeFaces.ab({s:";
     to = ",f:";
     formid = formid.substring(formid.indexOf(from) + from.length, formid.indexOf(to));
 
-    // console.log(formid);
     formId = formid.replace(/"/g, '');
     return 0;
 }
 
-function parseAbs(body) {
-
-    // convert body to string
+function parseAbs(body: string): any[] {
     try {
         body = body.toString();
     } catch (error) {
         console.log("Erreur lors de la conversion du contenu HTML en une chaîne de caractères :", error);
     }
 
-    // console.log(body);
     const absRows = body.match(/<tr data-ri="[^>]*>([\s\S]*?)<\/tr>/g);
     if (absRows === null) {
         console.log("Erreur au niveau des absences (recup des absences) !")
-        // console.log(body);
 
-        const result = [];
-        // throw new Error("No note found");
-        const abs = {};
+        const result: any[] = [];
+        const abs: any = {};
         abs.date = "";
         abs.type = "Erreur";
         abs.duree = "";
@@ -66,51 +59,48 @@ function parseAbs(body) {
 
         return result;
     }
-    // console.log(absRows);
+
     const absences = absRows.map((row) => {
-        const abs = {};
+        const abs: any = {}; // Add type annotation to abs object
         const cells = row.match(/<tr data-ri="[^>]*>([\s\S]*?)<\/tr>/g);
-        // console.log(cells);
-        abs.date = cells[0].match(
-            /<td role="gridcell" style="text-align: left">([^<]+)<\/td>/
-        )[1];
+        if (cells !== null) { // Handle possibility of cells being null
+            abs.date = cells[0].match(
+                /<td role="gridcell" style="text-align: left">([^<]+)<\/td>/
+            )?.[1] || ""; // Handle possibility of object having a value of null
 
-        let rowrow = cells[0].match(
-            /<td role="gridcell">([^<]+)<\/td>/g
-        );
+            let rowrow = cells[0].match(
+                /<td role="gridcell">([^<]+)<\/td>/g
+            );
 
-        abs.type = rowrow[0].match(
-            /<td role="gridcell">([^<]+)<\/td>/
-        )[1];
+            if (rowrow !== null) { // Handle possibility of rowrow being null
+                abs.type = rowrow[0].match(
+                    /<td role="gridcell">([^<]+)<\/td>/
+                )?.[1] || ""; // Handle possibility of object having a value of null
 
-        abs.duree = rowrow[1].match(
-            /<td role="gridcell">([^<]+)<\/td>/
-        )[1];
+                abs.duree = rowrow[1].match(
+                    /<td role="gridcell">([^<]+)<\/td>/
+                )?.[1] || ""; // Handle possibility of object having a value of null
 
-        abs.heure = rowrow[2].match(
-            /<td role="gridcell">([^<]+)<\/td>/
-        )[1];
+                abs.heure = rowrow[2].match(
+                    /<td role="gridcell">([^<]+)<\/td>/
+                )?.[1] || ""; // Handle possibility of object having a value of null
 
-        try {
-            abs.classe = rowrow[3].match(
-                /<td role="gridcell">([^<]+)<\/td>/
-            )[1];
-        } catch (error) {
-            abs.classe = "";
-        }
-        try{
-            abs.prof = rowrow[4].match(
-                /<td role="gridcell">([^<]+)<\/td>/
-            )[1];
-        } catch (error) {
-            abs.prof = "";
+                abs.classe = rowrow[3].match(
+                    /<td role="gridcell">([^<]+)<\/td>/
+                )?.[1] || ""; // Handle possibility of object having a value of null
+
+                abs.prof = rowrow[4].match(
+                    /<td role="gridcell">([^<]+)<\/td>/
+                )?.[1] || ""; // Handle possibility of object having a value of null
+            }
         }
         return abs;
     });
+
     return absences;
 }
 
-async function getViewState(url, sessionId) {
+async function getViewState(url: string, sessionId: string): Promise<string> {
     const res = await axios.get(url, {
         headers: {
             Cookie: `JSESSIONID=${sessionId}`,
@@ -122,7 +112,7 @@ async function getViewState(url, sessionId) {
     return parseViewState(res.data);
 }
 
-async function postMainSidebar(viewState, sessionId) {
+async function postMainSidebar(viewState: string, sessionId: string): Promise<string> {
     const res = await axios.post(
         "https://aurion.junia.com/faces/MainMenuPage.xhtml",
         new url.URLSearchParams({
@@ -146,11 +136,11 @@ async function postMainSidebar(viewState, sessionId) {
             },
         }
     );
-    // console.log(res.data);
+
     return parseMenuId(res.data);
 }
 
-async function postMainSidebarAbs(viewState, sessionId, menuId) {
+async function postMainSidebarAbs(viewState: string, sessionId: string, menuId: string): Promise<string> {
     const res = await axios.post(
         "https://aurion.junia.com/faces/MainMenuPage.xhtml",
         new url.URLSearchParams({
@@ -170,20 +160,17 @@ async function postMainSidebarAbs(viewState, sessionId, menuId) {
             maxRedirects: 1,
         }
     );
-    // console.log(res.data);
+
     return res.data;
 }
 
-export async function getAllAbsence(email, password) {
-    // console.time('ExecutionTime')
-
+export async function getAllAbsence(email: string, password: string): Promise<any[]> {
     const res = await login(email, password);
     if (res[1] !== 302) {
         console.log("Erreur au niveau des absences (login) !")
 
-        const result = [];
-        // throw new Error("No note found");
-        const abs = {};
+        const result: any[] = [];
+        const abs: any = {};
         abs.date = "";
         abs.type = "Erreur email ou mdp";
         abs.duree = "";
@@ -196,33 +183,23 @@ export async function getAllAbsence(email, password) {
     }
 
     const sessionId = res[0];
-    // console.log(sessionId);
 
     try {
         let viewState = await getViewState("https://aurion.junia.com/", sessionId);
-        // console.log(`main viewState: ${viewState}`);
         try {
             const menuid = await postMainSidebar(viewState, sessionId);
-            // console.log(`menuid: ${menuid}`);
             try {
                 let absences = await postMainSidebarAbs(viewState, sessionId, menuid);
-                // console.log(absences);
                 try {
                     const final = parseAbs(absences);
-                    // console.log(final);
-                    // console.timeEnd('ExecutionTime');
-                    return (final);
-
-
+                    return final;
                 } catch (error) {
                     console.log("Erreur / Pas d'abs (parseabs) !")
 
                     console.log(error);
-                    // console.log(absences);
 
-                    const result = [];
-                    // throw new Error("No note found");
-                    const abs = {};
+                    const result: any[] = [];
+                    const abs: any = {};
                     abs.date = "";
                     abs.type = "Erreur ou Aucune absence";
                     abs.duree = "";
@@ -236,9 +213,8 @@ export async function getAllAbsence(email, password) {
             } catch (error) {
                 console.log("Erreur au niveau des absences (postmainsidebarabs) !")
 
-                const result = [];
-                // throw new Error("No note found");
-                const abs = {};
+                const result: any[] = [];
+                const abs: any = {};
                 abs.date = "";
                 abs.type = "Erreur";
                 abs.duree = "";
@@ -252,9 +228,8 @@ export async function getAllAbsence(email, password) {
         } catch (error) {
             console.log("Erreur au niveau des absences (postmainsidebar) !")
 
-            const result = [];
-            // throw new Error("No note found");
-            const abs = {};
+            const result: any[] = [];
+            const abs: any = {};
             abs.date = "";
             abs.type = "Erreur";
             abs.duree = "";
@@ -268,9 +243,8 @@ export async function getAllAbsence(email, password) {
     } catch (error) {
         console.log("Erreur au niveau des absences (getviewstate) !")
 
-        const result = [];
-        // throw new Error("No note found");
-        const abs = {};
+        const result: any[] = [];
+        const abs: any = {};
         abs.date = "";
         abs.type = "Erreur";
         abs.duree = "";

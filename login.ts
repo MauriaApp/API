@@ -1,12 +1,11 @@
 import https from "node:https";
 
-export default async function login(email, password) {
+export default async function login(email: string, password: string): Promise<[string, number]> {
 
     email = encodeURIComponent(email);
     password = encodeURIComponent(password);
 
-    const payload = `username=${email}&password=${password}&j_idt28=`
-    // console.log(payload);
+    const payload = `username=${email}&password=${password}&j_idt28=`;
 
     const options = {
         hostname: "aurion.junia.com",
@@ -18,18 +17,14 @@ export default async function login(email, password) {
         },
     };
 
-
-    const ye = new Promise((resolve,reject) => {
+    const ye = new Promise<[string, number]>((resolve) => {
         const req = https.request(options, function (res) {
-            // console.log(`statusCode: ${res.statusCode}`);
-            // console.log(`headers: ${JSON.stringify(res.headers)}`);
-
-
             if (res.statusCode) {
-                req.abort();
-                return resolve([res.headers["set-cookie"][0].split(";")[0].split("=")[1],res.statusCode]);
+                req.destroy();
+                const cookie = res.headers["set-cookie"]?.[0]?.split(";")?.[0]?.split("=")?.[1] || "";
+                return resolve([cookie, res.statusCode]);
             }
-            
+
             res.on("error", (error) => {
                 console.error(error);
             });
