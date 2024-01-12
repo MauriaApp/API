@@ -203,14 +203,24 @@ app.post('/absences', function (req, res) {
       res.send(err);
     });
 });
-
 /**
  * @swagger
  * /planning:
  *   post:
  *     summary: Récupérer le planning
+ *     parameters:
+ *       - in: query
+ *         name: start
+ *         schema:
+ *           type: string
+ *         description: La date de début au format YYYY-MM-DD
+ *       - in: query
+ *         name: end
+ *         schema:
+ *           type: string
+ *         description: La date de fin au format YYYY-MM-DD (osef, on l'utilise pas)
  *     requestBody:
- *       description: Les informations d'authentification de l'utilisateur et les paramètres de planning
+ *       description: Les informations d'authentification de l'utilisateur
  *       required: true
  *       content:
  *         application/json:
@@ -223,13 +233,6 @@ app.post('/absences', function (req, res) {
  *               password:
  *                 type: string
  *                 description: Mot de passe
- *             parameters:
- *               start:
- *                 type: string
- *                 description: Date de début
- *               end:
- *                 type: string
- *                 description: Date de fin
  *     responses:
  *       '200':
  *         description: Planning récupéré avec succès

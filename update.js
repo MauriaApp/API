@@ -33,4 +33,4 @@ export async function getUpdate() {
 }
 
 
-// console.log(await getUpdate());
+// console.log(await getUpdate());  
