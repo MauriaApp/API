@@ -2,6 +2,7 @@ import { getAllNote } from './notes.js';
 import { getAllAbsence } from './absences.js';
 import { getPlanning } from './planning.js';
 import { PostStatsNotes, GetStatsNotes } from './statsNotes.js';
+import { getEventJunia } from './eventJunia.js';
 import login from './login.js';
 
 import express from 'express';
@@ -91,6 +92,27 @@ app.get('/msg', function (req, res) {
  */
 app.get('/update', function (req, res) {
   getUpdate()
+    .then((result) => {
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+});
+
+/**
+ * @swagger
+ * /events:
+ *   get:
+ *     summary: Obtenir les événements Junia
+ *     responses:
+ *       '200':
+ *         description: Events récupérées avec succès
+ *       '500':
+ *         description: Erreur serveur
+ */
+app.get('/events', function (req, res) {
+  getEventJunia()
     .then((result) => {
       res.status(200).send(result);
     })
