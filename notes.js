@@ -117,6 +117,14 @@ function parseNote(body) {
             note.coefficient = "";
         }
 
+        try {
+            note.commentaire = cells[5].match(
+                /<span class="preformatted ">([^<]+)<\/span>/
+            )[1];
+        } catch (error) {
+            note.commentaire = "";
+        }
+
         return note;
     });
     return notes;
@@ -245,6 +253,7 @@ export async function getAllNote(email, password) {
         note.epreuve = "Erreur email ou mdp";
         note.note = ":(";
         note.coefficient = "";
+        note.commentaire = "";
 
         result.push(note);
         return result;
@@ -284,6 +293,7 @@ export async function getAllNote(email, password) {
                         note.epreuve = "Erreur ou pas de note";
                         note.note = ":(";
                         note.coefficient = "";
+                        note.commentaire = "";
 
                         result.push(note);
                         return result;
@@ -300,6 +310,7 @@ export async function getAllNote(email, password) {
                     note.epreuve = "Erreur inconnue";
                     note.note = ":(";
                     note.coefficient = "";
+                    note.commentaire = "";
 
                     result.push(note);
                     return result;
@@ -316,6 +327,7 @@ export async function getAllNote(email, password) {
                 note.epreuve = "Erreur inconnue";
                 note.note = ":(";
                 note.coefficient = "";
+                note.commentaire = "";
 
                 result.push(note);
                 return result;
@@ -331,6 +343,7 @@ export async function getAllNote(email, password) {
             note.epreuve = "Erreur";
             note.note = ":(";
             note.coefficient = "";
+            note.commentaire = "";
 
             result.push(note);
             return result;
@@ -346,8 +359,10 @@ export async function getAllNote(email, password) {
         note.epreuve = "Erreur";
         note.note = ":(";
         note.coefficient = "";
+        note.commentaire = "";
 
         result.push(note);
         return result;
     }
 }
+
