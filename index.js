@@ -3,6 +3,7 @@ import { getAllAbsence } from './absences.js';
 import { getPlanning } from './planning.js';
 import { PostStatsNotes, GetStatsNotes } from './statsNotes.js';
 import { getEventJunia } from './eventJunia.js';
+import { getTools } from './tools.js';
 import login from './login.js';
 
 import express from 'express';
@@ -71,6 +72,27 @@ app.get('/assos', function (req, res) {
  */
 app.get('/msg', function (req, res) {
   getMsg()
+    .then((result) => {
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+});
+
+/**
+ * @swagger
+ * /tools:
+ *   get:
+ *     summary: Récupérer les outils Junia
+ *     responses:
+ *       '200':
+ *         description: Liste récupérée avec succès
+ *       '500':
+ *         description: Erreur serveur
+ */
+app.get('/tools', function (req, res) {
+  getTools()
     .then((result) => {
       res.status(200).send(result);
     })
