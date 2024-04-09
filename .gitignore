@@ -2,7 +2,7 @@
 /node_modules
 /detailplan.js
 /oldJson
-
+/eventJunia.js
 
 fly.toml
 .env

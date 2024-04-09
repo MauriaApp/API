@@ -1,6 +1,7 @@
 import { getAllNote } from './notes.js';
 import { getAllAbsence } from './absences.js';
 import { getPlanning } from './planning.js';
+import { getExactPlanning } from './exactPlanning.js';
 import { PostStatsNotes, GetStatsNotes } from './statsNotes.js';
 import { getEventJunia } from './eventJunia.js';
 import { getTools } from './tools.js';
@@ -285,6 +286,52 @@ app.post('/absences', function (req, res) {
  */
 app.post('/planning', function (req, res) {
   getPlanning(req.body.username, req.body.password, req.query.start, req.query.end)
+    .then((result) => {
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+});
+
+/**
+ * @swagger
+ * /exactPlanning:
+ *   post:
+ *     summary: Récupérer le planning
+ *     parameters:
+ *       - in: query
+ *         name: start
+ *         schema:
+ *           type: string
+ *         description: La date de début au format YYYY-MM-DD (NECESSAIRE)
+ *       - in: query
+ *         name: end
+ *         schema:
+ *           type: string
+ *         description: La date de fin au format YYYY-MM-DD (NECESSAIRE)
+ *     requestBody:
+ *       description: Les informations d'authentification de l'utilisateur
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: Nom d'utilisateur
+ *               password:
+ *                 type: string
+ *                 description: Mot de passe
+ *     responses:
+ *       '200':
+ *         description: Planning récupéré avec succès
+ *       '401':
+ *         description: Échec de l'authentification
+ */
+app.post('/exactPlanning', function (req, res) {
+  getExactPlanning(req.body.username, req.body.password, req.query.start, req.query.end)
     .then((result) => {
       res.status(200).send(result);
     })
