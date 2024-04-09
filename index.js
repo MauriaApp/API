@@ -164,9 +164,9 @@ app.get('/events', function (req, res) {
  *                 type: string
  *                 description: Mot de passe
  *     responses:
- *       '200':
+ *       '302':
  *         description: Authentification réussie
- *       '401':
+ *       '200':
  *         description: Échec de l'authentification
  */
 app.post('/login', function (req, res) {
