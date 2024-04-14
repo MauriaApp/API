@@ -34,7 +34,6 @@ Tout est disponible [ici](https://mauriaapi.fly.dev/api-docs/)
 5. Le projet est accessible à l'adresse suivante : `http://localhost:3000`
 
 
-
 ## Roadmap
 - Mettre à jour la documentation Swagger avec des exemples de réponses
 - Commenter le code (utilement et proprement)
