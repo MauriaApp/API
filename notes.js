@@ -118,7 +118,47 @@ function parseNote(body) {
         }
 
         try {
-            note.commentaire = cells[5].match(
+            note.moyenne = cells[5].match(
+                /<span class="preformatted ">([^<]+)<\/span>/
+            )[1];
+        } catch (error) {
+            note.moyenne = "";
+        }
+
+        try {
+            note.min = cells[6].match(
+                /<span class="preformatted ">([^<]+)<\/span>/
+            )[1];
+        } catch (error) {
+            note.min = "";
+        }
+
+        try {
+            note.max = cells[7].match(
+                /<span class="preformatted ">([^<]+)<\/span>/
+            )[1];
+        } catch (error) {
+            note.max = "";
+        }
+
+        try {
+            note.mediane = cells[8].match(
+                /<span class="preformatted ">([^<]+)<\/span>/
+            )[1];
+        } catch (error) {
+            note.mediane = "";
+        }
+
+        try {
+            note.ecartType = cells[9].match(
+                /<span class="preformatted ">([^<]+)<\/span>/
+            )[1];
+        } catch (error) {
+            note.ecartType = "";
+        }
+
+        try {
+            note.commentaire = cells[10].match(
                 /<span class="preformatted ">([^<]+)<\/span>/
             )[1];
         } catch (error) {

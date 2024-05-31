@@ -34,9 +34,9 @@ app.use(cors());
  *         description: Message d'accueil.
  */
 
-app.get('/', function (req, res) {
-  res.send("Hello World! Il n'y a rien ici :(");
-});
+// app.get('/', function (req, res) {
+//   res.send("Hello World! Il n'y a rien ici :(");
+// });
 
 /**
  * @swagger
@@ -432,10 +432,11 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const PORT = 8080;
-const HOST = '0.0.0.0';
+// const HOST = '0.0.0.0';
+const HOST = 'localhost';
 
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
