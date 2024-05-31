@@ -1,7 +1,2 @@
-/.vscode
-/node_modules
-/detailplan.js
-/oldJson
-
-fly.toml
-.env
+env/
+__pycache__/
