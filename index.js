@@ -1,4 +1,5 @@
 import { getAllNote } from './notes.js';
+import { getAllAbsNote } from './notesAbs.js';
 import { getAllAbsence } from './absences.js';
 import { getPlanning } from './planning.js';
 import { getExactPlanning } from './exactPlanning.js';
@@ -205,6 +206,42 @@ app.post('/login', function (req, res) {
  */
 app.post('/notes', function (req, res) {
   getAllNote(req.body.username, req.body.password)
+    .then((result) => {
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      res.send(err);
+    });
+});
+
+
+/**
+ * @swagger
+ * /notesAbs:
+ *   post:
+ *     summary: Récupérer des notes suite aux absences
+ *     requestBody:
+ *       description: Les informations d'authentification de l'utilisateur
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *                 description: Nom d'utilisateur
+ *               password:
+ *                 type: string
+ *                 description: Mot de passe
+ *     responses:
+ *       '200':
+ *         description: Notes récupérées avec succès
+ *       '401':
+ *         description: Échec de l'authentification
+ */
+app.post('/notesAbs', function (req, res) {
+  getAllAbsNote(req.body.username, req.body.password)
     .then((result) => {
       res.status(200).send(result);
     })
