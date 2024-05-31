@@ -16,7 +16,7 @@ Le repo ne contenant qu'uniquement le serveur Express, tous les fichiers sont di
 
 Une documentation Swagger a été mise en place pour décrire les différentes routes de l'API.
 
-Tout est disponible [ici](https://mauriaapi.fly.dev/api-docs/)
+Tout est disponible [ici](https://mauriaapi.fly.dev/)
 
 ## Installation
 

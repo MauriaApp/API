@@ -472,8 +472,8 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const PORT = 8080;
-// const HOST = '0.0.0.0';
-const HOST = 'localhost';
+const HOST = '0.0.0.0';
+// const HOST = 'localhost';
 
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
