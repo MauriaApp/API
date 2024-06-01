@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException, Depends, Query
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from pydantic import BaseModel
 from typing import Optional
+
+from utils.login import login
 
 
 # Remplacez ces importations par vos fonctions réelles
@@ -12,6 +14,7 @@ from typing import Optional
 # from exactPlanning import getExactPlanning
 # from statsNotes import PostStatsNotes, GetStatsNotes
 # from eventJunia import getEventJunia
+from routers import planning, notes, absences
 
 # from login import login
 from assos.main import get_assos
@@ -27,6 +30,12 @@ class PostStatsDetails(BaseModel):
     username: str
     password: str
     shared: bool
+    
+
+class DateRange(BaseModel):
+    start: int
+    end: int
+
     
 app = FastAPI()
 
@@ -66,7 +75,6 @@ async def read_tools():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
 @app.get("/updates")
 async def read_update():
     try:
@@ -82,22 +90,21 @@ async def read_events():
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+# PARTIE AURION
+app.include_router(planning.router, prefix="/planning", tags=["planning"])
+app.include_router(notes.router, prefix="/notes", tags=["notes"])
+app.include_router(absences.router, prefix="/absences", tags=["absences"])
+
 
 @app.post("/login")
-async def user_login(auth: AuthDetails):
+async def login_handler(auth : AuthDetails):
     try:
-        result = await login(auth.username, auth.password)
-        return {"status": result[1]}
+        cookie, status = await login(auth)
+        return JSONResponse(content={"cookie": cookie, "status": status})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return JSONResponse(content={"error": str(e)}, status_code=500)
 
-@app.post("/notes")
-async def read_notes(auth: AuthDetails):
-    try:
-        result = await getAllNote(auth.username, auth.password)
-        return result
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/notesAbs")
 async def read_notes_abs(auth: AuthDetails):
@@ -115,13 +122,6 @@ async def read_absences(auth: AuthDetails):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/planning")
-async def read_planning(auth: AuthDetails, start: Optional[str] = Query(None), end: Optional[str] = Query(None)):
-    try:
-        result = await getPlanning(auth.username, auth.password, start, end)
-        return result
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/exactPlanning")
 async def read_exact_planning(auth: AuthDetails, start: str = Query(...), end: str = Query(...)):
