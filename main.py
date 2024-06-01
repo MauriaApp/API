@@ -22,9 +22,7 @@ from messages.main import get_msg
 from tools.main import get_tools
 from updates.main import get_updates
 
-class AuthDetails(BaseModel):
-    username: str
-    password: str
+from models import AuthDetails
 
 class PostStatsDetails(BaseModel):
     username: str
@@ -101,6 +99,7 @@ app.include_router(absences.router, prefix="/absences", tags=["absences"])
 async def login_handler(auth : AuthDetails):
     try:
         cookie, status = await login(auth)
+        print(cookie, status)
         return JSONResponse(content={"cookie": cookie, "status": status})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
