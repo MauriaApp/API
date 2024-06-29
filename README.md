@@ -1,5 +1,14 @@
-# API 
+# API   (OUT-DATED)
 Code de l'API utilisé au sein de Mauria
+
+**EDIT : Ceci est le code de "l'ancienne API"
+les requêtes sont les mêmes encore aujourd'hui, mais ce n'est pas la version la plus récente.
+Nous nous sommes séparés de Strapi en faisant notre propre Headless CMS à l'aide de Firebase.
+De ce fait, un admin panel est né et la version actuelle de l'API n'est donc plus celle là.
+En revanche, encore une fois, les requêtes vers Aurion sont les mêmes.
+Nous metterons à jour ce repo prochainement.**
+
+---
 
 ## Technologies utilisées
 
