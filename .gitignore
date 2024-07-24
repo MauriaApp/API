@@ -1,7 +1,4 @@
-/.vscode
-/node_modules
-/detailplan.js
-/oldJson
+node_modules
+.env
 
 fly.toml
-.env

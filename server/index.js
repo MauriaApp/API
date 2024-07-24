@@ -1,27 +1,32 @@
-import { getAllNote } from './notes.js';
-import { getAllAbsNote } from './notesAbs.js';
-import { getAllAbsence } from './absences.js';
-import { getPlanning } from './planning.js';
-import { getExactPlanning } from './exactPlanning.js';
-import { PostStatsNotes, GetStatsNotes } from './statsNotes.js';
-import { getEventJunia } from './eventJunia.js';
-import { getTools } from './tools.js';
-import login from './login.js';
+import { getAllNote } from './routes/notes.js';
+import { getAllAbsNote } from './routes/notesAbs.js';
+import { getAllAbsence } from './routes/absences.js';
+import { getPlanning } from './routes/planning.js';
+import { getExactPlanning } from './routes/exactPlanning.js';
+import { PostStatsNotes, GetStatsNotes } from './routes/statsNotes.js';
+import { getEventJunia } from './routes/eventJunia.js';
+import login from './routes/login.js';
+
+import { getTools } from './routes/tools.js';
+import { getAssos } from './routes/assos.js';
+import { getMsg } from './routes/msg.js';
+import { getUpdate } from './routes/update.js';
 
 import express from 'express';
 import cors from 'cors';
-
-import { getAssos } from './assos.js';
-import { getMsg } from './msg.js';
-import { getUpdate } from './update.js';
+import { logRequests } from './middlewares/logRequests.js';
 
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+// app.use(logRequests);    ATTENTION à l'utilisation des quotas de Firebase ptdr
 
 // Documentez vos routes avec des commentaires JSDoc
 /**
@@ -35,9 +40,9 @@ app.use(cors());
  *         description: Message d'accueil.
  */
 
-// app.get('/', function (req, res) {
-//   res.send("Hello World! Il n'y a rien ici :(");
-// });
+app.get('/', function (req, res) {
+  res.send("Bienvenue sur l'API Mauria, pour plus d'informations, consultez la documentation sur /docs");
+});
 
 /**
  * @swagger
@@ -56,7 +61,7 @@ app.get('/assos', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
@@ -77,7 +82,7 @@ app.get('/msg', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
@@ -98,7 +103,7 @@ app.get('/tools', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
@@ -119,7 +124,7 @@ app.get('/update', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
@@ -140,7 +145,7 @@ app.get('/events', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
@@ -175,7 +180,7 @@ app.post('/login', function (req, res) {
       res.sendStatus(result[1]);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
@@ -210,7 +215,7 @@ app.post('/notes', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
@@ -246,7 +251,7 @@ app.post('/notesAbs', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
@@ -281,7 +286,7 @@ app.post('/absences', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 /**
@@ -326,7 +331,7 @@ app.post('/planning', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
@@ -372,7 +377,7 @@ app.post('/exactPlanning', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
@@ -410,7 +415,7 @@ app.post('/poststats', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
@@ -445,35 +450,60 @@ app.post('/getstats', function (req, res) {
       res.status(200).send(result);
     })
     .catch((err) => {
-      res.send(err);
+      res.status(500).send(err);
     });
 });
 
-// Ajoutez Swagger UI à votre application
+// Utiliser import.meta.url pour obtenir le répertoire courant
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Servir les fichiers statiques générés par Vite
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Rediriger les routes /admin vers le fichier index.html de Vite
+/**
+ * @swagger
+ * /admin:
+ *   get:
+ *     summary: Panel d'administration
+ */
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Configuration de Swagger
 const swaggerOptions = {
   swaggerDefinition: {
     openapi: '3.0.0',
     info: {
       title: 'API Mauria',
-      version: '1.0.0',
-      description: 'API pour l\'application Mauria permettant la récupération de données Aurion et Strapi',
+      version: '2.0.0',
+      description: 'API pour l\'application Mauria permettant la récupération de données Aurion et Firebase.',
     },
     servers: [
       {
         url: 'https://mauriaapi.fly.dev/',
+        // url: 'http://localhost:8080/',
         description: 'Serveur Fly.io',
       },
     ],
   },
-  apis: ["./index.js"], // Incluez ce fichier lui-même pour générer la documentation
+  apis: ['./server/index.js'], // Fichiers pour la documentation Swagger
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// Rediriger toutes les autres routes vers rien
+app.get('*', (req, res) => {
+  res.send("Bienvenue sur l'API Mauria, pour plus d'informations, consultez la documentation sur /docs");
+});
+
+// Configurer et démarrer le serveur
 const PORT = 8080;
-const HOST = '0.0.0.0';
-// const HOST = 'localhost';
+const HOST = '0.0.0.0'; // Pour écouter sur toutes les interfaces réseau
+// const HOST = 'localhost'; // Pour écouter uniquement sur localhost
 
 app.listen(PORT, HOST, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
