@@ -1,31 +1,29 @@
-# API   (OUT-DATED)
+# API 
 Code de l'API utilisé au sein de Mauria
-
-**EDIT : Ceci est le code de "l'ancienne API"
-les requêtes sont les mêmes encore aujourd'hui, mais ce n'est pas la version la plus récente.
-Nous nous sommes séparés de Strapi en faisant notre propre Headless CMS à l'aide de Firebase.
-De ce fait, un admin panel est né et la version actuelle de l'API n'est donc plus celle là.
-En revanche, encore une fois, les requêtes vers Aurion sont les mêmes.
-Nous metterons à jour ce repo prochainement.**
-
----
 
 ## Technologies utilisées
 
-- Express `v4.18.2`
+- Client : ViteJS (React) + TypeScript + FlowBite React
+- Serveur : ExpressJS + Firebase
 
 ## Structure du projet
 
-Le repo ne contenant qu'uniquement le serveur Express, tous les fichiers sont directement visibles:
-- `index.js` : contient le script de lancement du serveur
-- `msg.js` et `assos.js` : contiennent le code pour appeler le serveur Strapi
-- Les autres fichiers ont un nom plutôt explicite.
+Le repo est divisé en deux parties : `client` et `server`.
+
+### Client
+
+Le côté client est le nouveau front de l'API Mauria permettant une modification plus simple et rapide des données contenues dans Mauria (via Firebase).
+
+### Server
+
+Même fonction qu'avant, mais avec une meilleure gestion des erreurs et des logs. Le serveur est hébergé sur Fly.io et est accessible à l'adresse suivante : `https://mauriaapi.fly.dev/`
+
 
 ## Documentation
 
 Une documentation Swagger a été mise en place pour décrire les différentes routes de l'API.
 
-Tout est disponible [ici](https://mauriaapi.fly.dev/)
+Tout est disponible [ici](https://mauriaapi.fly.dev/docs)
 
 ## Installation
 
@@ -33,6 +31,7 @@ Tout est disponible [ici](https://mauriaapi.fly.dev/)
 
 - NodeJS `v18+`
 - npm *et/ou* yarn
+- La clé d'API Firebase (à demander à un admin)
 
 ### Installation
 
@@ -40,13 +39,12 @@ Tout est disponible [ici](https://mauriaapi.fly.dev/)
 2. Se placer dans le dossier du projet : `cd app`
 3. Installer les dépendances : `npm i`
 4. Lancer le projet : `npm start`
-5. Le projet est accessible à l'adresse suivante : `http://localhost:3000`
+5. Le projet sera accessible à l'adresse indiqué dans la console. 
 
 
 ## Roadmap
-- Mettre à jour la documentation Swagger avec des exemples de réponses
-- Commenter le code (utilement et proprement)
-- Passage sous TypeScript
+
+- Mise en place de l'API Aurion x Mauria pour éviter le scrapping et permettre plus de sécurité. (discussion en cours)
 
 
 ## Contribution

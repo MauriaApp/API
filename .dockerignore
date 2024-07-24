@@ -1,7 +1,17 @@
-/.vscode
-/node_modules
-/detailplan.js
-/oldJson
+# Ignore les fichiers/dossiers généraux
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+*.env
+
+# Ignore les fichiers spécifiques au client
+/client/node_modules
+/client/.env
+/client/build
+
+# Ignore les fichiers spécifiques au serveur
+/server/node_modules
+/server/.env
 
 fly.toml
-.env
