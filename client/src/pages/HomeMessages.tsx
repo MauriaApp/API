@@ -29,6 +29,13 @@ export default function HomeMessages() {
                 titre: newTitre,
                 description: newDescription
             });
+            setMessages([
+                {
+                    id: "0",
+                    titre: newTitre,
+                    description: newDescription
+                }
+            ]);
         } catch (error) {
             console.error("Erreur lors de la soumission :", error);
         }
@@ -54,14 +61,14 @@ export default function HomeMessages() {
                         <div className="block">
                             <Label htmlFor="titre" value="Titre" />
                         </div>
-                        <TextInput id="titre" type="text" placeholder={"Nouveau titre"} required onChange={(e) => setNewTitre(e.target.value)} />
+                        <TextInput value={messages[0].titre} id="titre" type="text" placeholder={"Nouveau titre"} required onChange={(e) => setNewTitre(e.target.value)} />
                     </div>
 
                     <div>
                         <div className=" block">
                             <Label htmlFor="description" value="Description" />
                         </div>
-                        <TextInput id="description" type="text" placeholder={"Nouvelle description"} required onChange={(e) => setNewDescription(e.target.value)} />
+                        <TextInput value={messages[0].description} id="description" type="text" placeholder={"Nouvelle description"} required onChange={(e) => setNewDescription(e.target.value)} />
                     </div>
 
                     <Button type="submit" onClick={updateMessage}>Mettre à jour</Button>

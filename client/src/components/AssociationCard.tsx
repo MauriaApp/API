@@ -1,5 +1,5 @@
 import { doc, deleteDoc } from "firebase/firestore";
-import { Card, Modal, Avatar, Button } from "flowbite-react";
+import { Card, Modal, Button } from "flowbite-react";
 import { useState } from "react";
 import { db } from "../../firebase.config";
 import { ModalNewAsso } from "./ModalNewAsso";
@@ -49,40 +49,50 @@ export function AssociationCard(association: Association) {
       </Card>
 
       <Modal show={openModal} size="md" onClose={() => setOpenModal(false)}>
-        <Modal.Body className="flex flex-col gap-10 items-center justify-center">
-          <Avatar
-            rounded
-            img={association.image ? association.image : undefined}
-            size="lg"
-          >
-            <div className="font-bold tracking-tight text-gray-900 dark:text-white">
-              {association.titre}
-            </div>
-          </Avatar>
 
-          <div className='text-center w-full text-gray-500 dark:text-gray-400 px-4'>
+        <Modal.Header>
+          <div className="font-bold tracking-tight">
+            {association.titre}
+          </div>
+        </Modal.Header>
+
+        {/* Contenu du modal */}
+        <Modal.Body className="relative z-10 flex flex-col gap-10 items-center justify-center">
+
+          <div
+            className="absolute inset-0 bg-cover bg-center filter blur-sm -z-10 opacity-20"
+            style={{ backgroundImage: `url(${association.image})` }}
+          ></div>
+
+          <div className="text-center w-full text-gray-700 dark:text-gray-200 px-4">
             <p>{association.description}</p>
           </div>
 
-          <div className="flex justify-center gap-4">
-            <Button color="gray" onClick={() => setOpenModal(false)}>
-              {"Fermer"}
-            </Button>
-            <Button
-              color="blue"
-              onClick={() => {
-                setEditAssociation(association);
-                setChangeModal(true);
-              }}
-            >
-              {"Modifier"}
-            </Button>
-            <Button color="failure" onClick={() => setDeleteModal(true)}>
-              {"Supprimer"}
-            </Button>
-          </div>
+
+          <Modal.Footer>
+            <div className="flex justify-center gap-4">
+              <Button color="light" onClick={() => setOpenModal(false)}>
+                {"Fermer"}
+              </Button>
+              <Button
+                color="blue"
+                onClick={() => {
+                  setEditAssociation(association);
+                  setChangeModal(true);
+                }}
+              >
+                {"Modifier"}
+              </Button>
+              <Button color="failure" onClick={() => setDeleteModal(true)}>
+                {"Supprimer"}
+              </Button>
+            </div>
+          </Modal.Footer>
+          
         </Modal.Body>
       </Modal>
+
+
 
       <Modal show={deleteModal} size="md" onClose={() => setDeleteModal(false)} popup>
         <Modal.Header />
@@ -109,7 +119,7 @@ export function AssociationCard(association: Association) {
           association={editAssociation}
           open={changeModal}
           // Ajouter une fonction de rappel pour fermer le modal
-          onClose={() => {setChangeModal(false); setOpenModal(false);}}
+          onClose={() => { setChangeModal(false); setOpenModal(false); }}
         />
       )}
     </>

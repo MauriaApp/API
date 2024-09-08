@@ -10,12 +10,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
         <div className="flex min-h-screen bg-gray-100 dark:bg-gray-700">
             {/* Sidebar */}
+            <div className="flex-none w-64">
             {currentUser && (
                 <Navbar />
             )}
+            </div>
 
             {/* Main content */}
-            <div className="p-6 overflow-y-auto flex-grow max-md:ml-16">
+            <div className="p-6 overflow-y-auto flex-auto">
                 <div className="flex items-center justify-center gap-4 pt-6">
                     {children}
                 </div>
