@@ -1,6 +1,7 @@
 {
     "name": "mauriaapi",
     "version": "2.0.0",
+
     "scripts": {
       "start": "node server/index.js",
       "build:client": "cd client && npm install && npm run build",
